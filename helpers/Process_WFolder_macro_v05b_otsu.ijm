@@ -8,8 +8,7 @@
 // create results as subfolder for input folder
 // replace split with rename for getting rid of DAPI in file name
 // 10 size limit added
-// Cy3 byckground substraction
-// ImageJ version: 1.52v99
+// Cy3 byckground substraction 
 
 /*
 # IJ Macro Protocol
@@ -54,6 +53,12 @@ print("ImageJ version: " + IJ.getFullVersion);
 run("Bio-Formats Macro Extensions");
 Ext.getVersionNumber(version)
 print("Bio-formats version: " + version);
+
+if (IJ.getFullVersion!="1.53t99") {
+	print("!!Alert!!");
+	print("Tested ImageJ version: 1.53t99, current:" + IJ.getFullVersion);
+}
+
 print("------------------");
 
 /*
@@ -62,7 +67,7 @@ print("------------------");
 
 #@ File (label = "Input directory", style = "directory") inputD
 #@ String (label = "Well names (div=',')", value = "B8,C8,D8,B7,C7,D7") we
-//#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6") we
+//#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6,B8,C8,D8,B7,C7,D7") we
 #@ String (label = "File suffix", value = ".tif") suffix
 wells = split(we,",");
 
@@ -85,9 +90,9 @@ for (i = 0; i < lengthOf(wells); i++) {
 	/*
 	 ## Process files
 	 */
-	setBatchMode(true);
+	//setBatchMode(true);
 	processFolder(input, suffix);
-	setBatchMode(false);
+	//setBatchMode(false);
 	
 	selectWindow("Log");
 	saveAs("Text", resDir + File.separator + w_name + "_Log"+".txt");
@@ -140,10 +145,27 @@ function processFolder(input, suffix) {
 
 				if (start) {
 					// get otsu threshold
-					setAutoThreshold("Otsu");
-					getThreshold(lower, upper);
-					print("Otsu lower th: " + lower);
-					print("Otsu upper th: " + upper);
+					if (IJ.getFullVersion=="1.53t99") {
+						setAutoThreshold("Otsu dark");
+						getThreshold(lower, upper);
+						print("Otsu lower th: " + lower);
+						print("Otsu upper th: " + upper);
+					}
+						else {
+								if (IJ.getFullVersion=="1.52v99") {
+										setAutoThreshold("Otsu");
+										getThreshold(lower, upper);
+										print("Otsu lower th: " + lower);
+										print("Otsu upper th: " + upper);
+			
+									} else {
+										print("!!!Alert!!! Tested version is 1.53t99");
+										setAutoThreshold("Otsu dark");
+										getThreshold(lower, upper);
+										print("Otsu lower th: " + lower);
+										print("Otsu upper th: " + upper);
+									}
+						}
 
 					// set measurements
 					run("Set Measurements...", "area mean standard modal min centroid center perimeter bounding fit shape feret's integrated median skewness kurtosis area_fraction stack display redirect=None decimal=5");
@@ -176,9 +198,18 @@ function processFile(input, file, suffix, lower, upper) {
 	// Otsu based threshold for all tiles
 	// based on setAutoThreshold("Otsu"); applied for whole well
 	setThreshold(lower, upper);
-	run("Convert to Mask");
-	run("Invert LUT");
-	run("Analyze Particles...", "size=0.00001-10.00 exclude add");
+	if (IJ.getFullVersion=="1.53t99") {
+		setOption("BlackBackground", true);
+		run("Convert to Mask");
+					if (IJ.getFullVersion=="1.52v99") {
+							run("Convert to Mask");
+							run("Invert LUT");;
+
+						} else {
+							setOption("BlackBackground", true);
+							run("Convert to Mask");
+						}}
+	run("Analyze Particles...", "size=0.001-10.00 exclude add");
 
 	
 	name=replace(file, "DAPI", ""); //old //name = split(file,"DAPI");
