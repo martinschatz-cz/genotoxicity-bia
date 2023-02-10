@@ -1,6 +1,6 @@
 // Process_Folder.ijm
 //	V 0.5
-//  update: 07.02.2023
+//  update: 09.02.2023
 //	by: Martin Schätz
 
 // Log, jpeg, results saved in input folder
@@ -47,7 +47,7 @@ run("Clear Results");
 
 
 ver = "0.5"
-print("Version: " + ver + ", last edit 07.02.2023");
+print("Version: " + ver + ", last edit 09.02.2023");
 
 print("ImageJ version: " + IJ.getFullVersion);
 run("Bio-Formats Macro Extensions");
@@ -66,12 +66,26 @@ print("------------------");
  */
 
 #@ File (label = "Input directory", style = "directory") inputD
-#@ String (label = "Well names (div=',')", value = "B8,C8,D8,B7,C7,D7") we
+#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6,B8,C8,D8,B7,C7,D7") we
 //#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6,B8,C8,D8,B7,C7,D7") we
 #@ String (label = "File suffix", value = ".tif") suffix
 wells = split(we,",");
+// clean log
+print("\\Clear");
 
 for (i = 0; i < lengthOf(wells); i++) {
+	print("ImageJ version: " + IJ.getFullVersion);
+	run("Bio-Formats Macro Extensions");
+	Ext.getVersionNumber(version)
+	print("Bio-formats version: " + version);
+	
+	if (IJ.getFullVersion!="1.53t99") {
+		print("!!Alert!!");
+		print("Tested ImageJ version: 1.53t99, current:" + IJ.getFullVersion);
+	}
+	
+	print("------------------");
+	
 	input=inputD + File.separator()+wells[i];
 
 	folders = split(input,File.separator());
@@ -90,9 +104,9 @@ for (i = 0; i < lengthOf(wells); i++) {
 	/*
 	 ## Process files
 	 */
-	//setBatchMode(true);
+	setBatchMode(true);
 	processFolder(input, suffix);
-	//setBatchMode(false);
+	setBatchMode(false);
 	
 	selectWindow("Log");
 	saveAs("Text", resDir + File.separator + w_name + "_Log"+".txt");
@@ -197,6 +211,9 @@ function processFile(input, file, suffix, lower, upper) {
 
 	// Otsu based threshold for all tiles
 	// based on setAutoThreshold("Otsu"); applied for whole well
+	
+	
+	
 	setThreshold(lower, upper);
 	if (IJ.getFullVersion=="1.53t99") {
 		setOption("BlackBackground", true);
@@ -209,6 +226,13 @@ function processFile(input, file, suffix, lower, upper) {
 							setOption("BlackBackground", true);
 							run("Convert to Mask");
 						}}
+	/////Cy3 image 512x512////
+		run("Scale...", "x=0.25 y=0.25 width=512 height=512 interpolation=None average create");
+		setOption("BlackBackground", false);
+		//run("Threshold...");
+		//setThreshold(122, 255);
+		run("Convert to Mask");
+	/////Cy3 image 512x512////
 	run("Analyze Particles...", "size=0.001-10.00 exclude add");
 
 	
@@ -219,39 +243,44 @@ function processFile(input, file, suffix, lower, upper) {
 ///// Cy3 image /////
 
 	// open Cy3 image
-	open(input + File.separator + Cy3title);
-	run("Duplicate...", " ");
-	print(Cy3title);
-	getDimensions(cwidth, cheight, channels, slices, frames);
+	if (File.exists(input + File.separator + Cy3title)) {
+		open(input + File.separator + Cy3title);
+		run("Duplicate...", " ");
+		print(Cy3title);
+		getDimensions(cwidth, cheight, channels, slices, frames);
+		
+		// substract background
+		run("Subtract Background...", "rolling=12 sliding"); //special
 	
-	// substract background
-	run("Subtract Background...", "rolling=50 sliding");
-
-	// check size of image
-	print("Cy3 Size: " + cwidth + "x"+cheight);	
-	if (cwidth!=dwidth || cheight!=dheight) {
-		print("!!! Chanels have different pixel count !!!");
+		// check size of image
+		print("Cy3 Size: " + cwidth + "x"+cheight);	
+		if (cwidth!=dwidth || cheight!=dheight) {
+			print("!!! Chanels have different pixel count !!!");
+		}
+	
+		//measure
+		roiManager("Show All without labels");
+		roiManager("Measure");
+		Cy3title=replace(Cy3title, suffix, "");
+		getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+	
+		//// possible sumarization
+		//saveAs("Results", input + File.separator + "Results" + File.separator + Cy3title+"_"+year+"-"+month+1+"-"+dayOfMonth+"_Results.csv");
+	
+		//num_results = nResults();
+		//run("Summarize");
+		
+		// Remove everything on top of the summary
+		//Table.deleteRows(0, num_results-1);
+	
+	///// Flatten Cy3 image with objects /////
+	
+		run("Flatten");
+		saveAs("Jpeg", input + File.separator + "Results" +  File.separator + Cy3title+"_"+year+"-"+month+1+"-"+dayOfMonth+"-flatten.jpg");
+		
+		print("Found objects: " + roiManager("count"));
+	} else {
+		print("File: "+input + File.separator + Cy3title + " does not exists. Skiping it.");
+		continue;
 	}
-
-	//measure
-	roiManager("Show All without labels");
-	roiManager("Measure");
-	Cy3title=replace(Cy3title, suffix, "");
-	getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
-
-	//// possible sumarization
-	//saveAs("Results", input + File.separator + "Results" + File.separator + Cy3title+"_"+year+"-"+month+1+"-"+dayOfMonth+"_Results.csv");
-
-	//num_results = nResults();
-	//run("Summarize");
-	
-	// Remove everything on top of the summary
-	//Table.deleteRows(0, num_results-1);
-
-///// Flatten Cy3 image with objects /////
-
-	run("Flatten");
-	saveAs("Jpeg", input + File.separator + "Results" +  File.separator + Cy3title+"_"+year+"-"+month+1+"-"+dayOfMonth+"-flatten.jpg");
-	
-	print("Found objects: " + roiManager("count"));
 }
