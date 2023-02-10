@@ -3,8 +3,8 @@
  */
 
 #@ File (label = "Input directory", style = "directory") input
-//#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6,") we
-#@ String (label = "Well names (div=',')", value = "B8,C8,D8,B7,C7,D7") we
+//#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6,B8,C8,D8,B7,C7,D7") we
+#@ String (label = "Well names (div=',')", value = "B2,C2,D2,B3,C3,D3,B4,C4,D4,B6,C6,D6,B8,C8,D8,B7,C7,D7") we
 #@ String (label = "File suffix", value = ".tif") suffix
 
 wells = split(we,",");
