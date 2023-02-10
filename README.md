@@ -1,4 +1,4 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinschatz-cz/genotoxicity-bia.git/HEAD?labpath=SF_dataVis_and_statistics.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinschatz-cz/genotoxicity-bia.git/HEAD?labpath=SF_dataVis_and_statistics_mean.ipynb)
 
 # test repo
 
