@@ -25,10 +25,6 @@ The macro logs version of ImageJ and BioImage plugin version on each run was tes
 
 ## Python scripts
 
-
-
-### Binder Jupetr Notebook
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinschatz-cz/genotoxicity-bia.git/HEAD?labpath=SF_dataVis_and_statistics_mean.ipynb)
 ### Recomended conda enviroment creation
 ```
 conda install mamba -c conda-forge
@@ -38,3 +34,17 @@ optional: Code Formatting Jupyter Notebooks with Black
 ```
 mamba install -c conda-forge jupyterlab_code_formatter black isort
 ```
+
+### Results processing
+
+The following scripts were used for CSV outputs processing:
+ * `SF_dataVis_and_statistics_mean_4h.ipynb`
+ * `SF_dataVis_and_statistics_mean_4h.ipynb`
+
+They expect folder with CSVs from each well, which is main result of  `Process_WFolder_macro_VERSION_otsu.ijm`. The result are charts, statistic comparison and relative area change with folds.
+
+### Image Quality Assessment
+
+### Binder Jupetr Notebook
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinschatz-cz/genotoxicity-bia.git/HEAD?labpath=/Python_scripts/SF_dataVis_and_statistics_mean_4h.ipynb)
+

@@ -1,8 +1,0 @@
-statannotations
-statsmodels
-pandas
-seaborn
-matplotlib
-scipy
-unzip
-watermark
