@@ -73,6 +73,7 @@ They expect folder with CSVs from each well, which is main result of  `Process_W
 ### BioImage Analysis
 `Process_WFolder_macro_v1.ijm` is script for BioImage analysis of wells based on DAPI channel and Cy3 channels. (Saved as separate images).
 
- * The firs step is to 
+ * The firs step is to specify path to folder with images sorted into wells.
+ * Second step is specify well names to process.
  
 ![GUI for sorting wells](/images/BiA_script.png)
