@@ -7,7 +7,7 @@ for (i = 0; i < imgs.length; i++) {
 	selectImage(imgs[i]);
    	setMinAndMax(min, max);
    	//run("Green");
-   	run("gem");
-   	saveAs("PNG", "H:/Bia/FPBT/Jablonska/mykotoxiny/time_comp/export/vis_"+ replace(imgs[i], ".tif", ".png"));
+   	//run("gem");
+   	//saveAs("PNG", "H:/Bia/FPBT/Jablonska/mykotoxiny/time_comp/export/vis_"+ replace(imgs[i], ".tif", ".png"));
 }
 
