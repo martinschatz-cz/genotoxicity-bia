@@ -7,7 +7,8 @@ You will find all scripts in scripts folder, with subfolders fro Python and Imag
 ### Sorting wells
 `sort_wells.ijm` is script  that sorts all images of defined format (default .tif) in folder based on well name in their filename. The well names must be defined.
 
-`Process_WFolder_macro_VERSION_otsu.ijm` is script for BioImage analysis of wells based on DAPI channel and Cy3 channels. (Saved as separate images).
+### BioImage Analysis
+`Process_WFolder_macro_v1.ijm` is script for BioImage analysis of wells based on DAPI channel and Cy3 channels. (Saved as separate images).
 
 This protocol documents an image data flow utilized and inspired by [CLIJx-Assistant](https://doi.org/10.1101/2020.11.19.386565).
 
@@ -22,6 +23,12 @@ This protocol documents an image data flow utilized and inspired by [CLIJx-Assis
 
 The macro logs version of ImageJ and BioImage plugin version on each run was tested in [ImageJ](https://imagej.net/software/fiji/downloads) version 1.53t99. The logs are also containing information about image size, count of objects, and threshold values.
 
+The results are saved in new subfolder in each Well folder. It contains numerical results per detected object in `.CSV`, LOG, flatten `.JPEG` of Cy3 channels with ROIs outlines and `.ZIP` folder with saved ROIs for each image.
+
+### Visualization
+`vis_CA_allOpened.ijm` script was used for brightness enhancement. It applies `run("Enhance Contrast", "saturated=0.35");` on active image, and then repeats the same transform from active image on all opened images.
+
+`enhance_ROI_outlines_flatten.ijm` makes edges of ROIs size 5 and flattens image for export as visualization for paper or on web.
 
 ## Python scripts
 
@@ -39,12 +46,33 @@ mamba install -c conda-forge jupyterlab_code_formatter black isort
 
 The following scripts were used for CSV outputs processing:
  * `SF_dataVis_and_statistics_mean_4h.ipynb`
- * `SF_dataVis_and_statistics_mean_4h.ipynb`
+ * `SF_dataVis_and_statistics_mean_24h.ipynb`
 
-They expect folder with CSVs from each well, which is main result of  `Process_WFolder_macro_VERSION_otsu.ijm`. The result are charts, statistic comparison and relative area change with folds.
+They expect folder with CSVs from each well, which is main result of  `Process_WFolder_macro_v1.ijm`. The result are charts, statistic comparison and relative area change with folds.
 
 ### Image Quality Assessment
 
 ### Binder Jupetr Notebook
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinschatz-cz/genotoxicity-bia.git/HEAD?labpath=/Python_scripts/SF_dataVis_and_statistics_mean_4h.ipynb)
 
+
+
+# Manuals
+
+### Sorting wells
+`sort_wells.ijm` is script  that sorts all images of defined format (default .tif) in folder based on well name in their filename. The well names must be defined.
+
+ * The firs step is to do a quality check and remove any low quality images
+ * Next step is to get all well names based on file names. Example for naming convention `ChannelName_YYYYMMD_Well_PossitionInWell_AcqRun.tiff`, the Well name would be after second `_`.
+ * Run `sort_wells.ijm` script.
+ * Select path to cleaned up images.
+ * Specify well names to sort
+ 
+![GUI for sorting wells](/images/sort_wells.png)
+
+### BioImage Analysis
+`Process_WFolder_macro_v1.ijm` is script for BioImage analysis of wells based on DAPI channel and Cy3 channels. (Saved as separate images).
+
+ * The firs step is to 
+ 
+![GUI for sorting wells](/images/BiA_script.png)
