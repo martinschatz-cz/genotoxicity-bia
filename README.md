@@ -1,3 +1,5 @@
+Published on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7673498.svg)](https://doi.org/10.5281/zenodo.7673498)
+
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/) [![ImageJ](https://a11ybadges.com/badge?logo=imagej)](https://imagej.net/software/fiji/downloads)
 # Genotoxicity BioImage Analysis
 
