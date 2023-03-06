@@ -36,11 +36,13 @@ The results are saved in new subfolder in each Well folder. It contains numerica
 
 ## Python scripts
 
+Ideal management of packages and enviroments is through anaconda or [miniconda](https://docs.conda.io/en/latest/miniconda.html).
 ### Recomended conda enviroment creation
 ```
 conda install mamba -c conda-forge
 mamba create --name julab python=3.9 jupyterlab -c conda-forge
 ```
+Change your working directory with `cd workDir`, where *workDir* is path to where you saved the `.ipynb` files. Activate conda enviroment and start jupyter-lab with following commands:
 ```
 conda activate julab 
 jupyter-lab
