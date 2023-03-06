@@ -41,6 +41,11 @@ The results are saved in new subfolder in each Well folder. It contains numerica
 conda install mamba -c conda-forge
 mamba create --name julab python=3.9 jupyterlab -c conda-forge
 ```
+```
+conda activate julab 
+jupyter-lab
+```
+
 optional: Code Formatting Jupyter Notebooks with Black
 ```
 mamba install -c conda-forge jupyterlab_code_formatter black isort
